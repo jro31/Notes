@@ -10,14 +10,19 @@ import UIKit
 
 class DetailViewController: UIViewController {
     
-    @IBOutlet var noteView: UIView!
+    @IBOutlet var noteText: UITextView!
     
     var selectedNote: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if let noteToLoad = selectedNote {
+            noteText.text = noteToLoad
+        } else {
+            noteText.text = "This is a new note, homie"
+        }
 
-        // Do any additional setup after loading the view.
     }
 
     override func didReceiveMemoryWarning() {

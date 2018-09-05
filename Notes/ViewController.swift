@@ -41,7 +41,9 @@ class ViewController: UITableViewController {
     }
     
     @objc func addNewNote() {
-        //Add code when new note button pressed here
+        if let vc = storyboard?.instantiateViewController(withIdentifier: "Detail") as? DetailViewController {
+            navigationController?.pushViewController(vc, animated: true)
+        }
     }
 
     override func didReceiveMemoryWarning() {
