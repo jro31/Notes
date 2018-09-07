@@ -11,13 +11,14 @@ import UIKit
 class ViewController: UITableViewController {
     
     var notes = [String]()
+    let defaults = UserDefaults.standard
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         title = "Notes"
         
-        notes = ["note 1", "note 2", "note 3"]
+        notes = defaults.object(forKey: "savedArray") as? [String] ?? [String]()
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(addNewNote))
 
@@ -36,14 +37,23 @@ class ViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let vc = storyboard?.instantiateViewController(withIdentifier: "Detail") as? DetailViewController {
             vc.selectedNote = notes[indexPath.row]
+            vc.notePath = indexPath.row
+            vc.notes = notes
             navigationController?.pushViewController(vc, animated: true)
         }
     }
     
     @objc func addNewNote() {
         if let vc = storyboard?.instantiateViewController(withIdentifier: "Detail") as? DetailViewController {
+            vc.notes = notes
             navigationController?.pushViewController(vc, animated: true)
         }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        
+        viewDidLoad()
+        tableView.reloadData()
     }
 
     override func didReceiveMemoryWarning() {
