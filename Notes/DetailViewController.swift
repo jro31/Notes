@@ -28,13 +28,13 @@ class DetailViewController: UIViewController {
         }
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveNote))
-        
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(deleteNote))
+        navigationItem.rightBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(deleteNote))
         
         let notificationCenter = NotificationCenter.default
         notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: Notification.Name.UIKeyboardWillHide, object: nil)
         notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: Notification.Name.UIKeyboardWillChangeFrame, object: nil)
-
+        notificationCenter.addObserver(self, selector: #selector(keyboardIsVisible), name: Notification.Name.UIKeyboardWillShow, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(keyboardIsHidden), name: Notification.Name.UIKeyboardWillHide, object: nil)
     }
     
     @objc func saveNote() {
@@ -96,6 +96,18 @@ class DetailViewController: UIViewController {
         
         let selectedRange = noteText.selectedRange
         noteText.scrollRangeToVisible(selectedRange)
+    }
+    
+    @objc func keyboardIsVisible(notification: Notification) {
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissKeyboard))
+    }
+    
+    @objc func keyboardIsHidden(notification: Notification) {
+        navigationItem.rightBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(deleteNote))
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
 
     override func didReceiveMemoryWarning() {
