@@ -28,6 +28,8 @@ class DetailViewController: UIViewController {
         }
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveNote))
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(deleteNote))
 
     }
     
@@ -43,10 +45,33 @@ class DetailViewController: UIViewController {
             }
         }
         
-        print("notes: \(notes)")
-        
         defaults.set(notes, forKey: "savedArray")
         
+        dismissVC()
+    }
+    
+    @objc func deleteNote() {
+        
+        let ac = UIAlertController(title: "Delete note", message: "Are you sure?", preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        ac.addAction(UIAlertAction(title: "Continue", style: .destructive, handler: confirmDeleteNote))
+        present(ac, animated: true)
+        
+    }
+    
+    func confirmDeleteNote(action: UIAlertAction) {
+        
+        if notePath == -1 {
+            dismissVC()
+        } else {
+            notes.remove(at: notePath)
+            defaults.set(notes, forKey: "savedArray")
+            dismissVC()
+        }
+        
+    }
+    
+    func dismissVC() {
         self.navigationController?.popViewController(animated: true)
         self.dismiss(animated: true, completion: nil)
     }
